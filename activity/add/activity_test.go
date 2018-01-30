@@ -1,7 +1,6 @@
 package add
 
 import (
-	"fmt"
 	"io/ioutil"
 	"testing"
 
