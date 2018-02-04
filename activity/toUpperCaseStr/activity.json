@@ -1,0 +1,21 @@
+{
+  "name": "Asha-toUpperCaseStr",
+  "type": "flogo:activity",
+  "ref": "github.com/ashakabra/flogo/activity/toUpperCaseStr",
+  "version": "0.0.1",
+  "title": "toUpperCase String",
+  "description": "Simple toUpperCase String Activity",
+  "homepage": "https://github.com/ashakabra/flogo/activity/toUpperCaseStr",
+  "inputs":[
+    {
+      "name": "InputStr",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "OutputToUpperStr",
+      "type": "string"
+    }
+  ]
+}
