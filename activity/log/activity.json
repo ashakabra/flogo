@@ -1,0 +1,32 @@
+{
+  "name": "Asha-log",
+  "type": "flogo:activity",
+  "ref": "github.com/ashakabra/flogo/activity/log",
+  "version": "0.0.1",
+  "title": "Asha - Log Message",
+  "description": "Asha - Simple Log Activity",
+  "homepage": "https://github.com/ashakabra/flogo/activity/log",
+  "inputs":[
+    {
+      "name": "message",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "flowInfo",
+      "type": "boolean",
+      "value": "false"
+    },
+    {
+      "name": "addToFlow",
+      "type": "boolean",
+      "value": "false"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "message",
+      "type": "string"
+    }
+  ]
+}
