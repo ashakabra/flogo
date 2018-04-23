@@ -43,7 +43,7 @@ func (a *GetUpdatedIssueActivity) Eval(context activity.Context) (done bool, err
 
 	fmt.Printf("Input Values are %s, %s, %s, %s", domain, basicAuthToken, project, issueType)
 
-	input := "project='" + project + "' AND issueType='" + issueType + "'"
+	input := "project='" + project + "' AND issueType='" + issueType + "' AND updated >= -1d"
 	url := domain + "/rest/api/2/search?jql=" + url.QueryEscape(input)
 
 	request, _ := http.NewRequest("GET", url, nil)
