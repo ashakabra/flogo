@@ -1,0 +1,35 @@
+{
+  "title": "Get Recently Updated JIRA issues",
+  "name": "tibco-wi-getupdated",
+  "author": "TIBCO Software Inc.",
+	"type": "flogo:activity",
+  "version": "0.0.1",
+  "description": "Get Recently Updated JIRA issues",
+	"ref": "github.com/ashakabra/flogo/activity/getupdatedjira",
+  
+  "inputs":[
+    {
+      "name": "domain",
+      "type": "string",
+      "value": "https://<subdomain>.tibco.com"
+    },
+    {
+      "name": "basicAuthToken",
+      "type": "string"
+    },
+    {
+      "name": "project",
+      "type": "string"
+    },
+    {
+      "name": "issueType",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "issueIDs",
+      "type": "string"
+    }
+  ]
+}
