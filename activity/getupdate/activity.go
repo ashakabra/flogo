@@ -18,6 +18,7 @@ const (
 	ivBasicAuthToken = "basicAuthToken"
 	ivProject        = "project"
 	ivIssueType      = "issueType"
+	ivWithinTime     = "withinTime"
 
 	ovIssueIDs = "issueIDs"
 )
@@ -40,10 +41,11 @@ func (a *GetUpdatedIssueActivity) Eval(context activity.Context) (done bool, err
 	basicAuthToken := context.GetInput(ivBasicAuthToken).(string)
 	project := context.GetInput(ivProject).(string)
 	issueType := context.GetInput(ivIssueType).(string)
+	withinTime := context.GetInput(ivWithinTime).(string)
 
-	fmt.Printf("Input Values are %s, %s, %s, %s", domain, basicAuthToken, project, issueType)
+	fmt.Printf("Input Values are %s, %s, %s, %s, %s", domain, basicAuthToken, project, issueType, withinTime)
 
-	input := "project='" + project + "' AND issueType='" + issueType + "' AND updated >= -1d"
+	input := "project='" + project + "' AND issueType='" + issueType + "' AND updated >= -" + withinTime
 	url := domain + "/rest/api/2/search?jql=" + url.QueryEscape(input)
 
 	request, _ := http.NewRequest("GET", url, nil)
@@ -77,7 +79,11 @@ func (a *GetUpdatedIssueActivity) Eval(context activity.Context) (done bool, err
 			outputStr = outputStr + issue["key"].(string) + ", "
 		}
 
-		outputStr = outputStr[0 : len(outputStr)-2] //remove last extra comma
+		if len(outputStr) != 0 {
+			outputStr = outputStr[0 : len(outputStr)-2] //remove last extra comma
+		} else {
+			outputStr = "No Issues found"
+		}
 		fmt.Printf("Output is  :: %s ", outputStr)
 		context.SetOutput(ovIssueIDs, outputStr)
 		//fmt.Printf("Issue id is - %s", issue["key"])

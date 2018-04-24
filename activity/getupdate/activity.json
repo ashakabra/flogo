@@ -24,6 +24,10 @@
     {
       "name": "issueType",
       "type": "string"
+    },
+    {
+      "name": "withinTime",
+      "type": "string"
     }
   ],
   "outputs": [

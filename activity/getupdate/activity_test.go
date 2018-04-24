@@ -45,7 +45,7 @@ func TestEval(t *testing.T) {
 	tc.SetInput(ivBasicAuthToken, "ZXNlY29ubmVjdG9yczozczNjMG5uZWN0b3Jz")
 	tc.SetInput(ivProject, "ESEC")
 	tc.SetInput(ivIssueType, "Task")
-
+	tc.SetInput(ivWithinTime, "1d")
 	act.Eval(tc)
 
 	//name := tc.GetOutput(name).(string)
