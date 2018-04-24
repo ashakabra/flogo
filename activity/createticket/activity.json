@@ -1,0 +1,45 @@
+{
+  "title": "JIRA - Create Ticket",
+  "name": "tibco-wi-createticket",
+  "author": "TIBCO Software Inc.",
+	"type": "flogo:activity",
+  "version": "0.0.1",
+  "description": "JIRA - Create Ticket",
+	"ref": "github.com/ashakabra/flogo/activity/createticket",
+  
+  "inputs":[
+    {
+      "name": "domain",
+      "type": "string",
+      "value": "https://<subdomain>.tibco.com"
+    },
+    {
+      "name": "basicAuthToken",
+      "type": "string"
+    },
+    {
+      "name": "project",
+      "type": "string"
+    },
+    {
+      "name": "summary",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "issueType",
+      "type": "string",
+      "required": true,
+      "allowed" : ["Story", "Enhancement", "Defect", "Task"]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "issueID",
+      "type": "string"
+    }
+  ]
+}
