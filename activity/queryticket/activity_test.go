@@ -46,8 +46,8 @@ func TestEval(t *testing.T) {
 	//tc.SetInput(ivQueryBy, "Recently Updated")
 	tc.SetInput(ivQueryBy, "Recently Created")
 	tc.SetInput(ivProject, "ESEC")
-	tc.SetInput(ivIssueType, "Defect")
-	tc.SetInput(ivWithinTime, "2d")
+	tc.SetInput(ivIssueType, "Enhancement")
+	tc.SetInput(ivWithinTime, "1m")
 	act.Eval(tc)
 
 	//name := tc.GetOutput(name).(string)

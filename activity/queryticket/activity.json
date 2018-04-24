@@ -29,7 +29,9 @@
     },
     {
       "name": "issueType",
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "allowed" : ["Story", "Enhancement", "Defect", "Task"]
     },
     {
       "name": "withinTime",
