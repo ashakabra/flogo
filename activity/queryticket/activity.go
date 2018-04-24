@@ -40,7 +40,7 @@ func (a *GetUpdatedIssueActivity) Metadata() *activity.Metadata {
 }
 
 func (a *GetUpdatedIssueActivity) Eval(context activity.Context) (done bool, err error) {
-	activityLog.Info("JIRA Query Get Recent Updated Activity")
+	activityLog.Info("JIRA Query Ticket")
 	domain := context.GetInput(ivDomain).(string)
 	basicAuthToken := context.GetInput(ivBasicAuthToken).(string)
 	queryBy := context.GetInput(ivQueryBy).(string)
@@ -98,9 +98,6 @@ func (a *GetUpdatedIssueActivity) Eval(context activity.Context) (done bool, err
 		}
 		fmt.Printf("Output is  :: %s ", outputStr)
 		context.SetOutput(ovIssueIDs, outputStr)
-		//fmt.Printf("Issue id is - %s", issue["key"])
-
-		//context.SetOutput(userId, dat_user["id"])
 	}
 
 	return true, nil
