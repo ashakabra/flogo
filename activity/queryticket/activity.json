@@ -1,0 +1,45 @@
+{
+  "title": "JIRA - Query Ticket",
+  "name": "tibco-wi-queryticket",
+  "author": "TIBCO Software Inc.",
+	"type": "flogo:activity",
+  "version": "0.0.1",
+  "description": "JIRA - Query Ticket",
+	"ref": "github.com/ashakabra/flogo/activity/queryticket",
+  
+  "inputs":[
+    {
+      "name": "domain",
+      "type": "string",
+      "value": "https://<subdomain>.tibco.com"
+    },
+    {
+      "name": "basicAuthToken",
+      "type": "string"
+    },
+    {
+      "name": "queryBy",
+      "type": "string",
+      "required": true,
+      "allowed" : ["Recently Updated", "Recently Created"]
+    },
+    {
+      "name": "project",
+      "type": "string"
+    },
+    {
+      "name": "issueType",
+      "type": "string"
+    },
+    {
+      "name": "withinTime",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "issueIDs",
+      "type": "string"
+    }
+  ]
+}
