@@ -1,4 +1,4 @@
-package getupdate
+package queryticket
 
 import (
 	"io/ioutil"
