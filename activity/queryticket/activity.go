@@ -27,19 +27,19 @@ const (
 	ovIssueIDs = "issueIDs"
 )
 
-type GetUpdatedIssueActivity struct {
+type QueryTicketActivity struct {
 	metadata *activity.Metadata
 }
 
 func NewActivity(metadata *activity.Metadata) activity.Activity {
-	return &GetUpdatedIssueActivity{metadata: metadata}
+	return &QueryTicketActivity{metadata: metadata}
 }
 
-func (a *GetUpdatedIssueActivity) Metadata() *activity.Metadata {
+func (a *QueryTicketActivity) Metadata() *activity.Metadata {
 	return a.metadata
 }
 
-func (a *GetUpdatedIssueActivity) Eval(context activity.Context) (done bool, err error) {
+func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err error) {
 	activityLog.Info("JIRA Query Ticket")
 	domain := context.GetInput(ivDomain).(string)
 	basicAuthToken := context.GetInput(ivBasicAuthToken).(string)
