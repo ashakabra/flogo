@@ -53,8 +53,7 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 	var input string
 	if queryBy == queryByUpdate {
 		input = "project='" + project + "' AND issueType='" + issueType + "' AND updated >= -" + withinTime
-	}
-	if queryBy == queryByCreate {
+	} else if queryBy == queryByCreate {
 		input = "project='" + project + "' AND issueType='" + issueType + "' AND created >= -" + withinTime
 	}
 
