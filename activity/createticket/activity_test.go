@@ -45,9 +45,11 @@ func TestEval(t *testing.T) {
 	tc.SetInput(ivBasicAuthToken, "ZXNlY29ubmVjdG9yczozczNjMG5uZWN0b3Jz")
 	tc.SetInput(ivProject, "ESEC")
 	tc.SetInput(ivSummary, "From GO TEST")
-	tc.SetInput(ivDescription, "Task is created from GO TEST")
-	tc.SetInput(ivIssueType, "Task")
-
+	tc.SetInput(ivDescription, "Enhancement is created from GO TEST")
+	tc.SetInput(ivIssueType, "Enhancement")
+	tc.SetInput(ivAffectVersion, "1.0.0")
+	tc.SetInput(ivSeverity, "Low")
+	tc.SetInput(ivConfirmer, "akabra")
 	act.Eval(tc)
 
 	//name := tc.GetOutput(name).(string)
