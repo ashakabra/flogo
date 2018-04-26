@@ -1,10 +1,10 @@
 {
-  "title": "JIRA - Create Ticket",
+  "title": "Create Ticket",
   "name": "tibco-wi-createticket",
   "author": "TIBCO Software Inc.",
 	"type": "flogo:activity",
   "version": "0.0.1",
-  "description": "JIRA - Create Ticket",
+  "description": "Create Ticket",
 	"ref": "github.com/ashakabra/flogo/activity/createticket",
   
   "inputs":[
