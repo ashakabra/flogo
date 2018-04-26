@@ -1,10 +1,10 @@
 {
-  "title": "JIRA - Query Ticket",
+  "title": "Query Ticket",
   "name": "tibco-wi-queryticket",
   "author": "TIBCO Software Inc.",
 	"type": "flogo:activity",
   "version": "0.0.1",
-  "description": "JIRA - Query Ticket",
+  "description": "Query Ticket",
 	"ref": "github.com/ashakabra/flogo/activity/queryticket",
   
   "inputs":[
