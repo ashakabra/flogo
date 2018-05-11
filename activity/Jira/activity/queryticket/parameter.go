@@ -10,7 +10,7 @@ import (
 )
 
 type Parameters struct {
-	Headers []*TypedValue `json:"headers"`
+	QueryParams []*TypedValue `json:"queryParams"`
 }
 
 type TypedValue struct {
@@ -66,30 +66,30 @@ func ParseParams(paramSchema map[string]interface{}) ([]Param, error) {
 
 func GetParameter(valueIN interface{}) (params *Parameters, err error) {
 	params = &Parameters{}
-	//Headers
-	activityLog.Info("Reading Request Header parameters")
-	headersMap, _ := LoadJsonSchemaFromMetadata(valueIN)
-	if headersMap != nil {
-		headers, err := ParseParams(headersMap)
+	//QueryParams
+	activityLog.Info("Reading Query parameters")
+	queryParamsMap, _ := LoadJsonSchemaFromMetadata(valueIN)
+	if queryParamsMap != nil {
+		queryParams, err := ParseParams(queryParamsMap)
 		if err != nil {
 			return params, err
 		}
 
-		if headers != nil {
-			inputHeaders, err := GetComplexValueAsMap(valueIN)
+		if queryParams != nil {
+			inputQueryParams, err := GetComplexValueAsMap(valueIN)
 			if err != nil {
 				return params, err
 			}
-			var typeValuesHeaders []*TypedValue
-			for _, hParam := range headers {
-				isRequired := hParam.Required
-				paramName := hParam.Name
-				if isRequired == "true" && inputHeaders[paramName] == nil {
-					return nil, fmt.Errorf("Required header parameter [%s] is not configured.", paramName)
+			var typeValuesQueryParams []*TypedValue
+			for _, qParam := range queryParams {
+				isRequired := qParam.Required
+				paramName := qParam.Name
+				if isRequired == "true" && inputQueryParams[paramName] == nil {
+					return nil, fmt.Errorf("Required query parameter [%s] is not configured.", paramName)
 				}
-				if inputHeaders[paramName] != nil {
-					if hParam.Repeating == "true" {
-						val := inputHeaders[paramName]
+				if inputQueryParams[paramName] != nil {
+					if qParam.Repeating == "true" {
+						val := inputQueryParams[paramName]
 
 						switch reflect.TypeOf(val).Kind() {
 						case reflect.Slice:
@@ -106,16 +106,16 @@ func GetParameter(valueIN interface{}) (params *Parameters, err error) {
 							typeValue.Name = paramName
 							//typeValue.Type = hParam.Type
 							typeValue.Value = value
-							typeValuesHeaders = append(typeValuesHeaders, typeValue)
+							typeValuesQueryParams = append(typeValuesQueryParams, typeValue)
 						}
 					} else {
 						typeValue := &TypedValue{}
 						typeValue.Name = paramName
-						typeValue.Value = inputHeaders[paramName]
+						typeValue.Value = inputQueryParams[paramName]
 						//typeValue.Type = hParam.Type
-						typeValuesHeaders = append(typeValuesHeaders, typeValue)
+						typeValuesQueryParams = append(typeValuesQueryParams, typeValue)
 					}
-					params.Headers = typeValuesHeaders
+					params.QueryParams = typeValuesQueryParams
 				}
 			}
 		}

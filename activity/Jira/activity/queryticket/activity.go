@@ -61,7 +61,7 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 		input = "issueType='" + issueType + "' AND created >= -" + withinTime
 	}
 
-	for _, value := range parameters.Headers {
+	for _, value := range parameters.QueryParams {
 		activityLog.Infof("Name :: %s , Value :: %s ", value.Name, value.Value)
 		stringValue := fmt.Sprint(value.Value)
 		input = input + " AND " + value.Name + " in (" + stringValue + ")"
