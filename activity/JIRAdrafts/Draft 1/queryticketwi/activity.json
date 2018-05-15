@@ -1,0 +1,71 @@
+{
+  "title": "Query Ticket WI",
+  "name": "tibco-wi-queryticket",
+  "author": "TIBCO Software Inc.",
+	"type": "flogo:activity",
+  "version": "0.0.1",
+  "description": "Query Ticket WI",
+	"ref": "queryticketwi",
+  
+  "inputs":[
+    {
+      "name": "domain",
+      "type": "string",
+      "value": "https://<subdomain>.tibco.com"
+    },
+    {
+      "name": "basicAuthToken",
+      "type": "string"
+    },
+    {
+      "name": "project",
+      "type": "string",
+      "required" : true,
+      "display": {
+        "description": "Enter JIRA Project key",
+        "name": "Project Key"
+      }
+    },
+    {
+      "name": "issueType",
+      "type": "string",
+      "required": true,
+      "allowed" : ["Story", "Enhancement", "Defect", "Task"],
+      "value": "Story",
+      "display":{
+        "description": "Select Issue Type",
+        "name": "Issue Type",
+        "type": "dropdown",
+        "selection": "single"
+      }
+    },
+    {
+      "name": "queryBy",
+      "type": "string",
+      "required": true,
+      "allowed" : ["Recently Updated", "Recently Created"],
+      "value": "Recently Updated",
+      "display":{
+        "description": "Get Query By",
+        "name": "Query By",
+        "type": "dropdown",
+        "selection": "single"
+      }
+    },
+    {
+      "name": "withinTime",
+      "type": "string",
+      "required": true,
+      "display": {
+           "description": "Enter time with unit. d for Days, h for Hours, m for Minutes",
+           "name": "Time"
+       }
+    }
+  ],
+  "outputs": [
+    {
+      "name": "issueIDs",
+      "type": "string"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "name": "jiracreateticket",
+  "title": "JIRA Create Ticket",
+  "version": "1.0.0",
+  "author": "TIBCO Software Inc.",
+	"type": "flogo:activity", 
+  "description": "JIRA Create Ticket",
+	"ref": "Jira/activity/createticket",
+  
+  "display": {
+    "category": "Jira",
+    "visible": true,
+    "description": "This activity can be used to create JIRA tickets"
+  },
+
+  "inputs":[
+    {
+      "name": "domain",
+      "type": "string",
+      "value": "https://<subdomain>.tibco.com"
+    },
+    {
+      "name": "basicAuthToken",
+      "type": "string"
+    },
+    {
+      "name": "project",
+      "type": "string",
+      "required" : true,
+      "display": {
+        "description": "Enter JIRA Project key",
+        "name": "Project Key"
+      }
+    },
+    {
+      "name": "issueType",
+      "type": "string",
+      "required": true,
+      "allowed" : ["Story", "Enhancement", "Defect", "Task"],
+      "value": "Story",
+      "display":{
+        "description": "Select Issue Type",
+        "name": "Issue Type",
+        "type": "dropdown",
+        "selection": "single"
+      }
+    },
+    {
+      "name": "summary",
+      "type": "string",
+      "required": true,
+      "display": {
+        "description": "Enter Ticket Summary",
+        "name": "Summary"
+      }
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "display": {
+        "description": "Enter Ticket Description",
+        "name": "Description"
+      }
+    },
+    {
+      "name": "affectVersion",
+      "type": "string",
+      "display": {
+        "description": "Enter Affect Version in all Issue Types(required) except Task",
+        "name": "Affect Version"
+      }
+    },
+    {
+      "name": "confirmer",
+      "type": "string",
+      "display": {
+        "description": "Enter Confirmer in all Issue Types(required) except Story, Task",
+        "name": "Confirmer"
+      }
+    },
+    {
+      "name": "severity",
+      "type": "string",
+      "allowed" : ["Critical", "High", "Low"],
+      "display":{
+        "description": "Select Severity in all Issues Types(required) except Task",
+        "name": "Severity",
+        "type": "dropdown",
+        "selection": "single"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "name": "issueID",
+      "type": "string"
+    }
+  ]
+}
