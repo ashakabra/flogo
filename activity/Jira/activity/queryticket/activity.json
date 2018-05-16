@@ -1,10 +1,10 @@
 {
-  "title": "Query Ticket WI",
-  "name": "tibco-wi-queryticket",
+  "name": "jiraqueryticket",
+  "title": "JIRA Query Ticket",
+  "version": "1.0.0",
   "author": "TIBCO Software Inc.",
 	"type": "flogo:activity",
-  "version": "0.0.1",
-  "description": "Query Ticket WI",
+  "description": "JIRA Query Ticket",
 	"ref": "Jira/activity/queryticket",
   
   "display": {
@@ -87,8 +87,12 @@
   ],
   "outputs": [
     {
-      "name": "issueIDs",
-      "type": "string"
+      "name": "output",
+      "type": "complex_object",
+      "value": {
+        "value": "{\"$schema\":\"http:\/\/json-schema.org\/draft-04\/schema#\",\"definitions\":{},\"id\":\"http:\/\/example.com\/example.json\",\"items\":{\"id\":\"\/items\",\"properties\":{\"key\":{\"id\":\"\/items\/properties\/string\",\"type\":\"string\"},\"summary\":{\"id\":\"\/items\/properties\/string\",\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}",
+        "metadata": ""
+      }
     }
   ]
 }

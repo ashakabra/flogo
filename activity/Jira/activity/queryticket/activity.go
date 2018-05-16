@@ -8,10 +8,11 @@ import (
 	"net/url"
 
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
+	"github.com/TIBCOSoftware/flogo-lib/core/data"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 )
 
-var activityLog = logger.GetLogger("jira-activity-getrecentlyupdated")
+var activityLog = logger.GetLogger("jira-activity-queryticket")
 
 const (
 	queryByUpdate = "Recently Updated"
@@ -25,7 +26,7 @@ const (
 	ivWithinTime     = "withinTime"
 	ivQueryParams    = "queryParams"
 
-	ovIssueIDs = "issueIDs"
+	ovOutput = "output"
 )
 
 type QueryTicketActivity struct {
@@ -40,6 +41,22 @@ func (a *QueryTicketActivity) Metadata() *activity.Metadata {
 	return a.metadata
 }
 
+func ParseOutput(outputSchema map[string]interface{}) ([]string, error) {
+	if outputSchema == nil {
+		return nil, nil
+	}
+
+	props := outputSchema["items"].(map[string]interface{})
+	properties := props["properties"].(map[string]interface{})
+	fields := make([]string, len(properties))
+	i := 0
+	for k, _ := range properties {
+		fields[i] = k
+		i++
+	}
+	return fields, nil
+}
+
 func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err error) {
 	activityLog.Info("JIRA Query Ticket")
 	domain := context.GetInput(ivDomain).(string)
@@ -49,6 +66,12 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 	issueType := context.GetInput(ivIssueType).(string)
 	withinTime := context.GetInput(ivWithinTime).(string)
 	parameters, err := GetParameter(context.GetInput(ivQueryParams))
+
+	outputMap, _ := LoadJsonSchemaFromMetadata(context.GetOutput(ovOutput))
+	if outputMap != nil {
+		outputFields, _ := ParseOutput(outputMap)
+		activityLog.Infof("Reading Output is :: %s", outputFields)
+	}
 
 	fmt.Printf("Input Values are %s, %s, %s, %s, %s, %s", domain, basicAuthToken, queryBy, project, issueType, withinTime)
 
@@ -79,11 +102,13 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error %s\n", err)
 	} else {
-		jsonResponseData, _ := ioutil.ReadAll(response.Body)
-		//fmt.Printf(string(jsonResponseData))
+		jsonResponseData, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Println(err)
+			return false, fmt.Errorf("Error reading JSON response data after query invocation, %s", err.Error())
+		}
+		defer response.Body.Close()
 
-		//queryResponse := make(map[string][]interface{})
-		//queryResponse := make(map[string]interface{})
 		var queryResponse interface{}
 		err = json.Unmarshal(jsonResponseData, &queryResponse)
 
@@ -91,23 +116,23 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 			fmt.Printf("Error :: %s", err)
 		}
 
-		var outputStr string
 		m := queryResponse.(map[string]interface{})
 		issues := m["issues"].([]interface{})
-
-		for i := range issues {
-			issue := issues[i].(map[string]interface{})
-			//fmt.Printf("Issue id is - %s", issue["key"])
-			outputStr = outputStr + issue["key"].(string) + ", "
-		}
-
-		if len(outputStr) != 0 {
-			outputStr = outputStr[0 : len(outputStr)-2] //remove last extra comma
+		responseIssues := make([]map[string]interface{}, len(issues))
+		if len(issues) > 0 {
+			for i := range issues {
+				issue := issues[i].(map[string]interface{})
+				responseIssues[i] = make(map[string]interface{})
+				responseIssues[i]["key"] = issue["key"].(string)
+				responseIssues[i]["summary"] = issue["fields"].(map[string]interface{})["summary"]
+			}
 		} else {
-			outputStr = "No Issues found"
+			activityLog.Infof("No issues found")
 		}
-		fmt.Printf("Output is :: %s ", outputStr)
-		context.SetOutput(ovIssueIDs, outputStr)
+
+		//activityLog.Infof("Output is -- %s", responseIssues)
+		output := &data.ComplexObject{Metadata: "", Value: responseIssues}
+		context.SetOutput(ovOutput, output)
 	}
 
 	return true, nil
