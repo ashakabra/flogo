@@ -109,6 +109,11 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 		}
 		defer response.Body.Close()
 
+		if response.StatusCode != 200 {
+			//activityLog.Infof("Jira Rest API received HTTP status: %d  detailed reason:[%s]", response.StatusCode, jsonResponseData)
+			return false, fmt.Errorf("Jira Rest API received HTTP status: %d  detailed reason:[%s]", response.StatusCode, jsonResponseData)
+		}
+
 		var queryResponse interface{}
 		err = json.Unmarshal(jsonResponseData, &queryResponse)
 
