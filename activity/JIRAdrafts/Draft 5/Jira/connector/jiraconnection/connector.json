@@ -13,7 +13,7 @@
 	"keyfield": "name",
 	"settings": [
 		{
-			"name": "connName",
+			"name": "name",
 			"type": "string",
 			"required": true,
 			"display": {

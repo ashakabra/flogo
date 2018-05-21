@@ -26,14 +26,14 @@ export class JIRAConnectorContribution extends WiServiceHandlerContribution {
     
     validate = (name: string, context: IConnectorContribution): Observable<IValidationResult> | IValidationResult => {
         if (name === "Save") {
-            let connName : IFieldDefinition;
+            let name : IFieldDefinition;
             let domain : IFieldDefinition;
             let userName: IFieldDefinition;
             let password: IFieldDefinition;
 
             for (let configuration of context.settings) {
-                if (configuration.name === "connName") {
-                    connName = configuration
+                if (configuration.name === "name") {
+                    name = configuration
                 } else if (configuration.name === "domain") {
                     domain = configuration
                 } else if (configuration.name === "userName"){
@@ -42,7 +42,7 @@ export class JIRAConnectorContribution extends WiServiceHandlerContribution {
                     password = configuration
                 }
             }
-            if (connName.value && domain.value && userName.value && password.value) {
+            if (name.value && domain.value && userName.value && password.value) {
                 return ValidationResult.newValidationResult().setReadOnly(false)
             } else {
                 return ValidationResult.newValidationResult().setReadOnly(true)
@@ -57,7 +57,7 @@ export class JIRAConnectorContribution extends WiServiceHandlerContribution {
                 let currentName : string;
 
                 for (let i = 0; i < context.settings.length; i++) {
-                    if (context.settings[i].name === "connName") {
+                    if (context.settings[i].name === "name") {
                         currentName = context.settings[i].value;
                     }
                 }
@@ -67,7 +67,7 @@ export class JIRAConnectorContribution extends WiServiceHandlerContribution {
                 WiContributionUtils.getConnections(this.http, this.category).subscribe((conns: IConnectorContribution[]) => {
                     for (let conn of conns) {
                         for (let i = 0; i < conn.settings.length; i++) {
-                            if (conn.settings[i].name === "connName") {
+                            if (conn.settings[i].name === "name") {
                                 let oldName = conn.settings[i].value;
                                 if (oldName === currentName && (WiContributionUtils.getUniqueId(conn) !== WiContributionUtils.getUniqueId(context))) {
                                     duplicate = true;

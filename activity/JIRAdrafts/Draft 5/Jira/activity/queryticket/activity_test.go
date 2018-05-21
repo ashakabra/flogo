@@ -1,15 +1,58 @@
 package queryticket
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"testing"
 
 	"github.com/TIBCOSoftware/flogo-contrib/action/flow/test"
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/core/data"
+	"github.com/stretchr/testify/assert"
 )
 
 var activityMetadata *activity.Metadata
+
+var connectionJSON = []byte(`{
+	"id" : "JiraTestConnection",
+	"name": "jiraconnection",
+	"description" : "JIRA Test Connection",
+	"title": "JIRA Connector",
+	"type": "flogo:connector",
+	"version": "1.0.0",
+	"ref": "Jira/connector/jiraconnection",
+	"keyfield": "name",
+	"settings": [
+		{
+		  "name": "name",
+		  "value": "MyTestConnection",
+		  "type": "string"
+		},
+		{
+		  "name": "description",
+		  "value": "My JIRA test Connection",
+		  "type": "string"
+		},
+		{
+		  "name": "domain",
+		  "value": "https://devjira.tibco.com",
+		  "type": "string"
+		  
+		},
+		{
+		  "name": "userName",
+		  "value": "eseconnectors",
+		  "type": "string"
+		  
+		},  
+		{
+		  "name": "password",
+		  "value": "3s3c0nnectors",
+		  "type": "string"
+		  
+		}
+	  ]
+}`)
 
 func getActivityMetadata() *activity.Metadata {
 
@@ -42,8 +85,11 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(getActivityMetadata())
 
 	//setup attrs
-	tc.SetInput(ivDomain, "https://jira.tibco.com")
-	tc.SetInput(ivBasicAuthToken, "YWthYnJhOkxpZ2h0MTIjJA==")
+	conn := make(map[string]interface{})
+	err := json.Unmarshal([]byte(connectionJSON), &conn)
+	assert.Nil(t, err)
+
+	tc.SetInput(ivConnection, conn)
 	//tc.SetInput(ivQueryBy, "Recently Updated")
 	tc.SetInput(ivQueryBy, "Recently Created")
 	//tc.SetInput(ivProject, "ESEC")

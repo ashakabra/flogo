@@ -19,8 +19,10 @@ import {
 @Injectable()
 
 export class JIRAActivityContribution extends WiServiceHandlerContribution {
+    private category: string;
     constructor( @Inject(Injector) injector, private http: Http) {
         super(injector, http);
+        this.category = "Jira";
     }
 
     value = (fieldName: string, context: IActivityContribution): Observable<any> | any => {
@@ -28,10 +30,10 @@ export class JIRAActivityContribution extends WiServiceHandlerContribution {
             return Observable.create(observer => {
                 let connectionRefs = [];
                 //Category is 'Jira'
-                WiContributionUtils.getConnections(this.http, "Jira").subscribe((data: IConnectorContribution[]) => {
+                WiContributionUtils.getConnections(this.http, this.category).subscribe((data: IConnectorContribution[]) => {
                     data.forEach(connection => {
                         for (let i = 0; i < connection.settings.length; i++) {
-                            if (connection.settings[i].name === "connName") {
+                            if (connection.settings[i].name === "name") {
                                 connectionRefs.push({
                                     "unique_id": WiContributionUtils.getUniqueId(connection),
                                     "name": connection.settings[i].value

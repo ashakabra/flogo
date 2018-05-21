@@ -160,7 +160,10 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 			activityLog.Infof("No issues found")
 		}
 
-		//activityLog.Infof("Output is -- %s", responseIssues)
+		//just extra logs for test, remove this later
+		activityLog.Infof("Number of issues in Output Map -- %d", len(issues))
+		activityLog.Infof("Output is -- %s", responseIssues)
+
 		output := &data.ComplexObject{Metadata: "", Value: responseIssues}
 		context.SetOutput(ovOutput, output)
 	}
