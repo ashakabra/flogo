@@ -1,6 +1,9 @@
+//ASK --error codes? activity.NewError("Zuora connection is not configured", "ZUORA-SUBSCRIBER-4001", nil)
+
 package queryticket
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -18,13 +21,12 @@ const (
 	queryByUpdate = "Recently Updated"
 	queryByCreate = "Recently Created"
 
-	ivDomain         = "domain"
-	ivBasicAuthToken = "basicAuthToken"
-	ivQueryBy        = "queryBy"
-	ivProject        = "project"
-	ivIssueType      = "issueType"
-	ivWithinTime     = "withinTime"
-	ivQueryParams    = "queryParams"
+	ivConnection  = "Connection"
+	ivQueryBy     = "queryBy"
+	ivProject     = "project"
+	ivIssueType   = "issueType"
+	ivWithinTime  = "withinTime"
+	ivQueryParams = "queryParams"
 
 	ovOutput = "output"
 )
@@ -59,21 +61,44 @@ func ParseOutput(outputSchema map[string]interface{}) ([]string, error) {
 
 func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err error) {
 	activityLog.Info("JIRA Query Ticket")
-	domain := context.GetInput(ivDomain).(string)
-	basicAuthToken := context.GetInput(ivBasicAuthToken).(string)
+
+	//Read Inputs
+	if context.GetInput(ivConnection) == nil || len(context.GetInput(ivConnection).(map[string]interface{})) == 0 {
+		return false, fmt.Errorf("Jira connection is not configured")
+	}
+
+	//Read connection details
+	connectionInfo := context.GetInput(ivConnection).(map[string]interface{})
+	connectionSettings := connectionInfo["settings"].([]interface{})
+	var domain, userName, password string
+	for _, v := range connectionSettings {
+		setting := v.(map[string]interface{})
+		if setting["name"] == "domain" {
+			domain = setting["value"].(string)
+		} else if setting["name"] == "userName" {
+			userName = setting["value"].(string)
+		} else if setting["name"] == "password" {
+			password = setting["value"].(string)
+		}
+	}
+
+	activityLog.Infof("Connection Details is -- domain : %s, username : %s", domain, userName)
+
 	queryBy := context.GetInput(ivQueryBy).(string)
 	project := context.GetInput(ivProject).(string)
 	issueType := context.GetInput(ivIssueType).(string)
 	withinTime := context.GetInput(ivWithinTime).(string)
 	parameters, err := GetParameter(context.GetInput(ivQueryParams))
 
+	//extra code to read key names of output
 	outputMap, _ := LoadJsonSchemaFromMetadata(context.GetOutput(ovOutput))
 	if outputMap != nil {
 		outputFields, _ := ParseOutput(outputMap)
 		activityLog.Infof("Reading Output is :: %s", outputFields)
 	}
+	//end of extra code
 
-	fmt.Printf("Input Values are %s, %s, %s, %s, %s, %s", domain, basicAuthToken, queryBy, project, issueType, withinTime)
+	fmt.Printf("Input Values are %s, %s, %s, %s", queryBy, project, issueType, withinTime)
 
 	var input string
 	if queryBy == queryByUpdate {
@@ -94,7 +119,7 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 	url := domain + "/rest/api/2/search?jql=" + url.QueryEscape(input)
 
 	request, _ := http.NewRequest("GET", url, nil)
-	request.Header.Set("Authorization", "Basic "+basicAuthToken)
+	request.Header.Set("Authorization", "Basic "+basicAuth(userName, password))
 
 	client := &http.Client{}
 	response, err := client.Do(request)
@@ -135,10 +160,18 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 			activityLog.Infof("No issues found")
 		}
 
-		//activityLog.Infof("Output is -- %s", responseIssues)
+		//just extra logs for test, remove this later
+		activityLog.Infof("Number of issues in Output Map -- %d", len(issues))
+		activityLog.Infof("Output is -- %s", responseIssues)
+
 		output := &data.ComplexObject{Metadata: "", Value: responseIssues}
 		context.SetOutput(ovOutput, output)
 	}
 
 	return true, nil
+}
+
+func basicAuth(username, password string) string {
+	auth := username + ":" + password
+	return base64.StdEncoding.EncodeToString([]byte(auth))
 }
