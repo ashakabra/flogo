@@ -1,7 +1,7 @@
 import { HttpModule } from "@angular/http";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { JIRAActivityContribution} from "./activity";
+import { JiraQueryTicketActivityContribution} from "./activity";
 import { WiServiceContribution} from "wi-studio/app/contrib/wi-contrib";
 
 @NgModule({
@@ -12,11 +12,11 @@ import { WiServiceContribution} from "wi-studio/app/contrib/wi-contrib";
     providers: [
       {
          provide: WiServiceContribution,
-         useClass: JIRAActivityContribution
+         useClass: JiraQueryTicketActivityContribution
        }
     ]
   })
   
-  export default class JIRAActivityModule {
+  export default class JiraQueryTicketActivityModule {
   
   }

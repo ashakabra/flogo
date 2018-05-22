@@ -18,7 +18,7 @@ import {
 @WiContrib({})
 @Injectable()
 
-export class JIRAActivityContribution extends WiServiceHandlerContribution {
+export class JiraQueryTicketActivityContribution extends WiServiceHandlerContribution {
     private category: string;
     constructor( @Inject(Injector) injector, private http: Http) {
         super(injector, http);
@@ -29,7 +29,7 @@ export class JIRAActivityContribution extends WiServiceHandlerContribution {
         if (fieldName === "Connection") {
             return Observable.create(observer => {
                 let connectionRefs = [];
-                //Category is 'Jira'
+                
                 WiContributionUtils.getConnections(this.http, this.category).subscribe((data: IConnectorContribution[]) => {
                     data.forEach(connection => {
                         for (let i = 0; i < connection.settings.length; i++) {

@@ -119,7 +119,7 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 	url := domain + "/rest/api/2/search?jql=" + url.QueryEscape(input)
 
 	request, _ := http.NewRequest("GET", url, nil)
-	request.Header.Set("Authorization", "Basic "+basicAuth(userName, password))
+	request.Header.Set("Authorization", "Basic "+BasicAuth(userName, password))
 
 	client := &http.Client{}
 	response, err := client.Do(request)
@@ -171,7 +171,7 @@ func (a *QueryTicketActivity) Eval(context activity.Context) (done bool, err err
 	return true, nil
 }
 
-func basicAuth(username, password string) string {
+func BasicAuth(username, password string) string {
 	auth := username + ":" + password
 	return base64.StdEncoding.EncodeToString([]byte(auth))
 }
