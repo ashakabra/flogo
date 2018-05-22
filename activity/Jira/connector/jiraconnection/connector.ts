@@ -3,8 +3,8 @@
  */
 import {Inject, Injectable, Injector} from "@angular/core";
 import {Http} from "@angular/http";
-import { WiContrib, WiContributionUtils, WiServiceHandlerContribution, AUTHENTICATION_TYPE } from "wi-studio/app/contrib/wi-contrib";
-import { IConnectorContribution, IFieldDefinition, IActionResult, ActionResult } from "wi-studio/common/models/contrib";
+import { WiProxyCORSUtils, WiContrib, WiContributionUtils, WiServiceHandlerContribution, AUTHENTICATION_TYPE } from "wi-studio/app/contrib/wi-contrib";
+import { IConnectorContribution, IFieldDefinition, IActionResult, ActionResult, HTTP_METHOD } from "wi-studio/common/models/contrib";
 import { Observable } from "rxjs/Observable";
 import { IValidationResult, ValidationResult, ValidationError } from "wi-studio/common/models/validation";
 
@@ -25,7 +25,7 @@ export class JIRAConnectorContribution extends WiServiceHandlerContribution {
     }
     
     validate = (name: string, context: IConnectorContribution): Observable<IValidationResult> | IValidationResult => {
-        if (name === "Save") {
+        if (name === "Connect") {
             let name : IFieldDefinition;
             let domain : IFieldDefinition;
             let userName: IFieldDefinition;
@@ -52,7 +52,7 @@ export class JIRAConnectorContribution extends WiServiceHandlerContribution {
     }
 
     action = (actionName: string, context: IConnectorContribution): Observable<IActionResult> | IActionResult => {
-        if (actionName == "Save") {
+        if (actionName == "Connect") {
             return Observable.create(observer => {
                 let currentName : string;
 
@@ -80,12 +80,35 @@ export class JIRAConnectorContribution extends WiServiceHandlerContribution {
                     if (duplicate) {
                         observer.next(ActionResult.newActionResult().setSuccess(false).setResult(new ValidationError("JIRA-CONNECTOR-001", "Connection name already exists")));
                     } else {
-                        let actionResult = {
-                            context: context,
-                            authType: AUTHENTICATION_TYPE.BASIC,
-                            authData: {}
+                        let domain = "", userName = "", password = "";
+                        for (let configuration of context.settings) {
+                            if (configuration.name === "domain") {
+                                domain = configuration.value
+                            } else if (configuration.name === "userName") {
+                                userName = configuration.value
+                            } else if (configuration.name === "password") {
+                                password = configuration.value
+                            }
                         }
-                        observer.next(ActionResult.newActionResult().setSuccess(true).setResult(actionResult));
+
+                        let jiraURL = domain + "/rest/auth/1/session"
+
+                        WiProxyCORSUtils.createRequest(this.http, jiraURL)
+                            .addMethod(HTTP_METHOD.GET)
+                            .addHeader("Content-Type", "application/json")
+                            .addHeader("Authorization", "Basic " + btoa(userName + ":" + password))
+                            .send().subscribe(resp => {
+                                let actionResult = {
+                                    context: context,
+                                    authType: AUTHENTICATION_TYPE.BASIC,
+                                    authData: {}
+                                }
+                                observer.next(ActionResult.newActionResult().setSuccess(true).setResult(actionResult));
+                            },
+                            error => {
+                                observer.next(ActionResult.newActionResult().setSuccess(false).setResult(new ValidationError("JIRA-CONNECTOR-002", "Failed to create connection. Check your configuration.")));
+                            }
+                        );
                     }
                 });
             });
