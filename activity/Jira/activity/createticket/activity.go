@@ -118,22 +118,18 @@ func (a *CreateTicketActivity) Eval(context activity.Context) (done bool, err er
 	//Versions,Severity is not allowed in case of Task
 	//Versions,Severity is required in case of Enhancement, Defect & Optional in case of Story(but it is allowed)
 	if issue.Fields.IssueType.Name != issueTask {
-		if context.GetInput(ivAffectVersion) != "" {
-			versions[0].Name = context.GetInput(ivAffectVersion).(string)
-			issue.Fields.Versions = versions
-		}
+		versions[0].Name = context.GetInput(ivAffectVersion).(string)
+		issue.Fields.Versions = versions
 
-		if context.GetInput(ivSeverity) != "" {
-			//Allowed values are: 10036[1-Critical], 10037[2-High], 10038[3-Low]
-			if context.GetInput(ivSeverity).(string) == severityCritical {
-				severity.Id = "10036"
-			} else if context.GetInput(ivSeverity).(string) == severityHigh {
-				severity.Id = "10037"
-			} else if context.GetInput(ivSeverity).(string) == severityLow {
-				severity.Id = "10038"
-			}
-			issue.Fields.Severity = severity
+		//Allowed values are: 10036[1-Critical], 10037[2-High], 10038[3-Low]
+		if context.GetInput(ivSeverity).(string) == severityCritical {
+			severity.Id = "10036"
+		} else if context.GetInput(ivSeverity).(string) == severityHigh {
+			severity.Id = "10037"
+		} else if context.GetInput(ivSeverity).(string) == severityLow {
+			severity.Id = "10038"
 		}
+		issue.Fields.Severity = severity
 	}
 
 	//fmt.Printf("Input Values are %s, %s, %s, %s, %s, %s", domain, basicAuthToken, issue.Fields.Project.Key, issue.Fields.Summary, issue.Fields.Description, issue.Fields.IssueType.Name)
