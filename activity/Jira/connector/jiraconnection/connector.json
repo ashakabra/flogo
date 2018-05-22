@@ -1,11 +1,11 @@
 {
 	"name": "jiraconnection",
-	"title": "JIRA Connector",
+	"title": "Jira Connector",
 	"author": "TIBCO Software Inc.",
 	"type": "flogo:connector",
 	"version": "1.0.0",
 	"display": {
-		"description": "This is JIRA Connector",
+		"description": "This is Jira Connector",
 		"category": "Jira",
 		"visible": true
 		},

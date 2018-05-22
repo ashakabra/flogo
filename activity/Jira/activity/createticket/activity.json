@@ -1,16 +1,16 @@
 {
   "name": "jiracreateticket",
-  "title": "JIRA Create Ticket",
+  "title": "Jira Create Ticket",
   "version": "1.0.0",
   "author": "TIBCO Software Inc.",
 	"type": "flogo:activity", 
-  "description": "JIRA Create Ticket",
+  "description": "Jira Create Ticket",
 	"ref": "Jira/activity/createticket",
   
   "display": {
     "category": "Jira",
     "visible": true,
-    "description": "This activity can be used to create JIRA tickets"
+    "description": "This activity can be used to create Jira tickets"
   },
 
   "inputs":[
@@ -21,7 +21,7 @@
       "allowed":[],
       "display": {
         "name": "Connection Name",
-        "description": "Select a JIRA connection",
+        "description": "Select a Jira connection",
         "type":"connection",
         "selection": "single",
         "visible": true
@@ -32,7 +32,7 @@
       "type": "string",
       "required" : true,
       "display": {
-        "description": "Enter JIRA Project key",
+        "description": "Enter Jira Project key",
         "name": "Project Key"
       }
     },

@@ -1,16 +1,16 @@
 {
   "name": "jiraqueryticket",
-  "title": "JIRA Query Ticket",
+  "title": "Jira Query Ticket",
   "version": "1.0.0",
   "author": "TIBCO Software Inc.",
 	"type": "flogo:activity",
-  "description": "JIRA Query Ticket",
+  "description": "Jira Query Ticket",
 	"ref": "Jira/activity/queryticket",
   
   "display": {
     "category": "Jira",
     "visible": true,
-    "description": "This activity can be used to get recently updated or get recently created JIRA tickets"
+    "description": "This activity can be used to get recently updated or get recently created Jira tickets"
   },
 
   "inputs":[
@@ -21,7 +21,7 @@
       "allowed":[],
       "display": {
         "name": "Connection Name",
-        "description": "Select a JIRA connection",
+        "description": "Select a Jira connection",
         "type":"connection",
         "selection": "single",
         "visible": true
@@ -32,7 +32,7 @@
       "type": "string",
       "required" : false,
       "display": {
-        "description": "Enter JIRA Project key",
+        "description": "Enter Jira Project key",
         "name": "Project Key",
         "visible": false
       }
