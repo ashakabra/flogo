@@ -54,6 +54,27 @@ export class JiraCreateTicketActivityContribution extends WiServiceHandlerContri
             if (connection.value === null) {
                 return ValidationResult.newValidationResult().setError("JIRA-1000", "Jira Connection must be configured");
             }
+        } else if (fieldName === "severity") {
+            let issue: IFieldDefinition = context.getField("issueType");
+            if (issue.value === "Task") {
+                return ValidationResult.newValidationResult().setVisible(false);
+            } else {
+                return ValidationResult.newValidationResult().setVisible(true);
+            }
+        } else if (fieldName === "confirmer") {
+            let issue: IFieldDefinition = context.getField("issueType");
+            if (issue.value === "Story" || issue.value === "Task") {
+                return ValidationResult.newValidationResult().setVisible(false);
+            } else {
+                return ValidationResult.newValidationResult().setVisible(true);
+            }
+        } else if (fieldName === "affectVersion") {
+            let issue: IFieldDefinition = context.getField("issueType");
+            if (issue.value === "Task") {
+                return ValidationResult.newValidationResult().setVisible(false);
+            } else {
+                return ValidationResult.newValidationResult().setVisible(true);
+            }
         }
         return null;
     }
