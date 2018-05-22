@@ -1,0 +1,69 @@
+{
+	"name": "jiraconnection",
+	"title": "JIRA Connector",
+	"author": "TIBCO Software Inc.",
+	"type": "flogo:connector",
+	"version": "1.0.0",
+	"display": {
+		"description": "This is JIRA Connector",
+		"category": "Jira",
+		"visible": true
+		},
+	"ref": "Jira/connector/jiraconnection",
+	"keyfield": "name",
+	"settings": [
+		{
+			"name": "name",
+			"type": "string",
+			"required": true,
+			"display": {
+				"name": "Connection Name",
+				"description": "Name of the connection"
+			}
+		},
+		{
+			"name": "description",
+			"type": "string",
+			"display": {
+				"name": "Description",
+				"description": "Connection description"
+			}
+		},
+		{
+			"name": "domain",
+			"type": "string",
+			"required": true,
+			"display": {
+				"name": "Base URL",
+				"description": "Enter your full publicly accessable Jira URL"
+			}
+		},
+		{
+			"name": "userName",
+			"type": "string",
+			"required": true,
+			"display": {
+				"name": "User Name",
+				"description": "Jira User Name"
+			}
+		},
+		{
+			"name": "password",
+			"type": "string",
+			"required": true,
+			"display": {
+				"name": "Password",
+				"description": "Jira Password",
+				"type": "password"
+			}
+		}
+	],
+	"actions": [
+		{
+			"name": "Connect",
+			"display": {
+                "readonly": true
+            }
+		}
+	]
+}
