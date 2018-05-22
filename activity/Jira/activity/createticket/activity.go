@@ -2,6 +2,7 @@ package createticket
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -21,15 +22,14 @@ const (
 	severityHigh     = "High"
 	severityLow      = "Low"
 
-	ivDomain         = "domain"
-	ivBasicAuthToken = "basicAuthToken"
-	ivProject        = "project"
-	ivIssueType      = "issueType"
-	ivSummary        = "summary"
-	ivDescription    = "description"
-	ivAffectVersion  = "affectVersion"
-	ivConfirmer      = "confirmer"
-	ivSeverity       = "severity"
+	ivConnection    = "Connection"
+	ivProject       = "project"
+	ivIssueType     = "issueType"
+	ivSummary       = "summary"
+	ivDescription   = "description"
+	ivAffectVersion = "affectVersion"
+	ivConfirmer     = "confirmer"
+	ivSeverity      = "severity"
 
 	ovIssueID = "issueID"
 )
@@ -81,8 +81,28 @@ func (a *CreateTicketActivity) Eval(context activity.Context) (done bool, err er
 	severity := &Severity{}
 	confirmer := &Confirmer{}
 
-	domain := context.GetInput(ivDomain).(string)
-	basicAuthToken := context.GetInput(ivBasicAuthToken).(string)
+	//Read Inputs
+	if context.GetInput(ivConnection) == nil || len(context.GetInput(ivConnection).(map[string]interface{})) == 0 {
+		return false, fmt.Errorf("Jira connection is not configured")
+	}
+
+	//Read connection details
+	connectionInfo := context.GetInput(ivConnection).(map[string]interface{})
+	connectionSettings := connectionInfo["settings"].([]interface{})
+	var domain, userName, password string
+	for _, v := range connectionSettings {
+		setting := v.(map[string]interface{})
+		if setting["name"] == "domain" {
+			domain = setting["value"].(string)
+		} else if setting["name"] == "userName" {
+			userName = setting["value"].(string)
+		} else if setting["name"] == "password" {
+			password = setting["value"].(string)
+		}
+	}
+
+	activityLog.Infof("Connection Details is -- domain : %s, username : %s", domain, userName)
+
 	issue.Fields.Project.Key = context.GetInput(ivProject).(string)
 	issue.Fields.Summary = context.GetInput(ivSummary).(string)
 	issue.Fields.Description = context.GetInput(ivDescription).(string)
@@ -124,7 +144,7 @@ func (a *CreateTicketActivity) Eval(context activity.Context) (done bool, err er
 
 	request, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Authorization", "Basic "+basicAuthToken)
+	request.Header.Set("Authorization", "Basic "+BasicAuth(userName, password))
 
 	client := &http.Client{}
 	response, err := client.Do(request)
@@ -148,4 +168,10 @@ func (a *CreateTicketActivity) Eval(context activity.Context) (done bool, err er
 	}
 
 	return true, nil
+}
+
+//move below code to common go file
+func BasicAuth(username, password string) string {
+	auth := username + ":" + password
+	return base64.StdEncoding.EncodeToString([]byte(auth))
 }
