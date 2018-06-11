@@ -1,0 +1,65 @@
+{
+  "name": "jiracreateticket",
+  "title": "Jira Create Ticket",
+  "version": "1.0.0",
+  "author": "TIBCO Software Inc.",
+	"type": "flogo:activity", 
+  "description": "Jira Create Ticket",
+	"ref": "Jira/activity/createticket",
+  
+  "display": {
+    "category": "Jira",
+    "visible": true,
+    "description": "This activity can be used to create Jira tickets"
+  },
+
+  "inputs":[
+    {
+      "name": "Connection",
+      "type": "object",
+      "required": true,
+      "allowed":[],
+      "display": {
+        "name": "Connection Name",
+        "description": "Select a Jira connection",
+        "type":"connection",
+        "selection": "single",
+        "visible": true
+      }
+    },
+    {
+      "name": "project",
+      "type": "string",
+      "allowed" : [],
+      "required" : true,
+      "display": {
+        "description": "Select Project key",
+        "name": "Project Key",
+        "type": "dropdown",
+        "selection": "single"
+      }
+    },
+    {
+      "name": "issueType",
+      "type": "string",
+      "required": true,
+      "allowed" : [],
+      "display":{
+        "description": "Select Issue Type",
+        "name": "Issue Type",
+        "type": "dropdown",
+        "selection": "single"
+      }
+    },
+		{
+			"name": "input",
+			"type": "complex_object"
+		}
+  ],
+  "outputs": [
+    {
+      "name": "output",
+      "type": "complex_object"
+    }
+  ]
+}
